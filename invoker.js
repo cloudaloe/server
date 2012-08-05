@@ -1,21 +1,22 @@
 //
 // New module for UI leaden management - not stable and should not be run other than for development
-// Launches on the command prompt through entering: node invoker.js
+// Launches on the command prompt through entering: node invoker.js (after npm install socket.io express)
 //
 
-var http = require('http');
 var fs = require('fs');
 
 var app = require('http').createServer(handler)
 var io = require('socket.io').listen(app)
 var fs = require('fs')
+var port = 1337;
 
-app.listen(1337);
+app.listen(port);
 
 io.sockets.on('connection', function (socket) {
 	socket.emit('helloClient', { payload: 'no special info...' });
 	socket.on('runNow', function (clientObject) {
-		console.log(clientObject.runParams);
+		console.log("Request to invoke the agent received from client, " + clientObject.runParams + ".");
+		console.log('About to invoke the agent....');				
 		invokeHeadless();
 	});
 });
@@ -27,7 +28,7 @@ var agentRunning=false;
 //var nodetime = require('nodetime');
 //nodetime.profile();
 
-console.log('Uber Agent is up.\nUI listening on http://127.0.0.1:1337/.\n');
+console.log('Uber Agent is up. Its UI listening on http://127.0.0.1:' + port + '.\n');
 
 function handler(request, response) {
 	console.log('Received request - method: ' + request.method + ' url: ' + request.url);

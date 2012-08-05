@@ -1,14 +1,19 @@
 <!doctype html>
 <html ng-app>
   <head>
-    <script src="http://code.angularjs.org/angular-1.0.1.min.js"></script>
-	<script src="/socket.io/socket.io.js"></script>
+    <script src="/socket.io/socket.io.js"></script>
 	<script>
 		var socket = io.connect('http://localhost:1337');
 		socket.on('helloClient', function (serverObject) {
 			alert('got helloClient message with payload: ' + serverObject.payload);
-			socket.emit('runNow', { runParams: 'Go' });
 		});
+		
+		agentStatus='Unknown';
+		
+		function runNow() { 
+			agentStatus='Run request sent';
+			socket.emit('runNow', { runParams: 'no special params' })
+		};
 	</script>
 	
 	<!-- 
@@ -24,12 +29,12 @@
 	<!-- link href="button.css" rel="stylesheet" type="text/css" / -->	
   </head>
   <body>
-	Agent Status: 
-    <p>
-    {{dataObtainerStatus}}
+	<p>
+	Agent Status: agentStatus
 	</p>
 	<div>
-		<button type="button" onClick="$resource('http://127.0.0.1:1337/run')">Run now</button>		
+		<!-- button type="button" onClick=$resource('http://127.0.0.1:1337/run')">Run now</button -->		
+		<button type="button" onClick="runNow()">Run now</button>				
 	</div>
-  </body>
+</body>
 </html>
