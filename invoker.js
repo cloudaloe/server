@@ -58,6 +58,21 @@ function handler(request, response) {
 				response.write('Running the agent....');				
 				invoke(response);				
 				break;
+			case '/knockout-2.1.0.js':
+				fs.readFile('./knockout-2.1.0.js', function(error, content) {
+					if (error) {
+						response.writeHead(500);
+						response.end("Error: could not load required javascript library");
+						// this assumes the browser does not need to obtain any css or js referenced in the html.
+						// for now that is the case. Otherwise see basic snippets at 
+						// http://thecodinghumanist.com/blog/archives/2011/5/6/serving-static-files-from-node-js
+					}
+					else {
+						response.writeHead(200, { 'Content-Type': 'text/javascript' });
+						response.end(content, 'utf-8');
+					}
+				});
+				break;
 			default:
 				response.writeHead(200, {'Content-Type': 'text/plain'});	
 				response.end('Oops, the requested page was not found....');	
