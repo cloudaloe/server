@@ -16,7 +16,7 @@ io.sockets.on('connection', function (socket) {
 	socket.emit('helloClient', { payload: 'no special info...' });
 	socket.on('runNow', function (clientObject) {
 		console.log(clientObject.runParams);
-		//invokeHeadless();
+		invokeHeadless();
 	});
 });
 
@@ -90,7 +90,7 @@ function invokeHeadless(){
 	agentRunning=true;
 	var time = process.hrtime();
 	var spawn = require('child_process').spawn
-	child=spawn('java',['-jar', 'target/data-obtainer.jar'])	
+	child=spawn('java',['-jar', 'data-obtainer.jar'])	
 	
 	child.stdout.on('data', function (data) { });	
 	child.stderr.on('data', function (data) { });
