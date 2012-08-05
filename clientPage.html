@@ -1,0 +1,35 @@
+<!doctype html>
+<html ng-app>
+  <head>
+    <script src="http://code.angularjs.org/angular-1.0.1.min.js"></script>
+	<script src="/socket.io/socket.io.js"></script>
+	<script>
+		var socket = io.connect('http://localhost:1337');
+		socket.on('helloClient', function (serverObject) {
+			alert('got helloClient message with payload: ' + serverObject.payload);
+			socket.emit('runNow', { runParams: 'Go' });
+		});
+	</script>
+	
+	<!-- 
+	<link href="css/button.css" rel="stylesheet" type="text/css" />	
+	<link href="css/jquery-ui-1.8.2.custom.css" rel="stylesheet" type="text/css" />
+	<link href="css/colorpicker.css" rel="stylesheet" type="text/css" />
+	<script type="text/javascript" src="js/jquery.1.4.2.min.js"></script>
+	<script type="text/javascript" src="js/jquery-ui-1.8.2.custom.min.js"></script>
+	<script type="text/javascript" src="js/colorpicker.js"></script>
+	<script type="text/javascript" src="js/cssbuttongenerator.js"></script>
+	-->
+
+	<!-- link href="button.css" rel="stylesheet" type="text/css" / -->	
+  </head>
+  <body>
+	Agent Status: 
+    <p>
+    {{dataObtainerStatus}}
+	</p>
+	<div>
+		<button type="button" onClick="$resource('http://127.0.0.1:1337/run')">Run now</button>		
+	</div>
+  </body>
+</html>
