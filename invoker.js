@@ -3,27 +3,42 @@
 // Launches on the command prompt through entering: node invoker.js (after npm install socket.io express)
 //
 
-var fs = require('fs');
+var fs 	= require('fs');
+var nconf = require('nconf'); 
+nconf.file({ file: 'config/config.json'});
+var agentIntervalSeconds = nconf.get('agentIntervalSeconds');
+if (agentIntervalSeconds) 
+	{console.log('Agent interval is ' + agentIntervalSeconds +' seconds.');}
+else
+	{console.log('Agent interval not yet set.');}
 
-var fs = require('fs')
 var app = require('http').createServer(handler)
 var io = require('socket.io').listen(app)
-var static = require('node-static');
-var file = new(static.Server)('./public');
-var port = 1337;
 
+var static = require('node-static'); 
 staticContentServer = new static.Server('./public', { cache: false });
+
+//
+// Must add thorough error handling here
+//
+var port = nconf.get('server:port');
 app.listen(port);
 
 io.sockets.on('connection', function (socket) {
-	socket.emit('helloClient', { payload: 'no special info...' });
+	socket.emit('agentStatus', agentRunning);
 	socket.on('runNow', function (clientObject) {
-		console.log("Request to invoke the agent received from client, " + clientObject.runParams + ".");
+	if (agentRunning) 
+	{ 
+		console.log('"Request to invoke the agent received from client, but the agent is already running') 
+	}
+	else
+	{
+		console.log("Request to invoke the agent received from client. Params: " + clientObject.runParams + ".");
 		console.log('About to invoke the agent....');				
-		invokeHeadless();
+		invokeHeadless(socket);
+	}
 	});
 });
-
 
 var agentRunning=false;
 
@@ -62,7 +77,29 @@ function handler(request, response) {
 // should use Angular / Meteor / Ajax to stream it
 // later also streamm it into a usable place on screen
 // later also address the horrible dull formatting
-function invoke(response){
+
+function invokeHeadless(socket){
+
+	var time = process.hrtime();
+	var spawn = require('child_process').spawn
+	
+	agentRunning=true;
+	socket.emit('agentStatus', agentRunning);		
+		
+	child=spawn('java',['-jar', 'data-obtainer.jar'])	
+		
+	child.stdout.on('data', function (data) { });	
+	child.stderr.on('data', function (data) { });
+	child.on('exit', function (code) { 
+		invocationDuration = process.hrtime(time);	
+		console.log('Child agent finished with code ' + code + "," + " having operated for %d seconds and %d millieseoncds.", invocationDuration[0], invocationDuration[1]/1000000); 
+		
+		agentRunning=false;
+		socket.emit('agentStatus', agentRunning);		
+	});
+}
+
+function DeprecatedInvoke(response){
 
 	agentRunning=true;
 	var time = process.hrtime();
@@ -77,21 +114,5 @@ function invoke(response){
 		console.log('Child agent finished with code ' + code + "," + " having operated for %d seconds and %d millieseoncds.", invocationDuration[0], invocationDuration[1]/1000000); 
 		agentRunning=false;
 		response.end();		
-	});
-}
-
-function invokeHeadless(){
-
-	agentRunning=true;
-	var time = process.hrtime();
-	var spawn = require('child_process').spawn
-	child=spawn('java',['-jar', 'data-obtainer.jar'])	
-	
-	child.stdout.on('data', function (data) { });	
-	child.stderr.on('data', function (data) { });
-	child.on('exit', function (code) { 
-		invocationDuration = process.hrtime(time);	
-		console.log('Child agent finished with code ' + code + "," + " having operated for %d seconds and %d millieseoncds.", invocationDuration[0], invocationDuration[1]/1000000); 
-		agentRunning=false;
 	});
 }
