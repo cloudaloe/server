@@ -12,7 +12,7 @@ var static = require('node-static');
 var file = new(static.Server)('./public');
 var port = 1337;
 
-staticContentServer = new static.Server('./public');
+staticContentServer = new static.Server('./public', { cache: false });
 app.listen(port);
 
 io.sockets.on('connection', function (socket) {
