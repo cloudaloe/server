@@ -3,3 +3,5 @@
 data-obtainer.jar
 data.csv
 /obsolete*
+/public/jquery
+/downloads

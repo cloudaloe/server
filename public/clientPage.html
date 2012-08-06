@@ -3,20 +3,22 @@
   <head>
     <script src="/socket.io/socket.io.js"></script>
 	<script type='text/javascript' src='knockout-2.1.0.js'></script>
+	<link type="text/css" href="jquery/css/dark-hive/jquery-ui-1.8.22.custom.css" rel="stylesheet" />
+	<script type="text/javascript" src="jquery/js/jquery-1.7.2.min.js"></script>
+	<script type="text/javascript" src="jquery/js/jquery-ui-1.8.22.custom.min.js"></script>
+			
   </head>
 
   
   <body>
   	<p>Agent status: <strong data-bind="text: agentStatus"></strong></p>
 	<div>
-		<!-- button type="button" onClick=$resource('http://127.0.0.1:1337/run')">Run now</button -->		
 		<button type="button" onClick="runNow()">Run now</button>				
 	</div>
   </body>
 
   
   <script>
-	//var agentStatus = "unknown";
 	var socket = io.connect('http://localhost:1337');
 	socket.on('helloClient', function (serverObject) {
 		alert('got helloClient message with payload: ' + serverObject.payload);

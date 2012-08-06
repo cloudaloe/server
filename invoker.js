@@ -5,11 +5,14 @@
 
 var fs = require('fs');
 
+var fs = require('fs')
 var app = require('http').createServer(handler)
 var io = require('socket.io').listen(app)
-var fs = require('fs')
+var static = require('node-static');
+var file = new(static.Server)('./public');
 var port = 1337;
 
+staticContentServer = new static.Server('./public');
 app.listen(port);
 
 io.sockets.on('connection', function (socket) {
@@ -39,43 +42,16 @@ function handler(request, response) {
 				// serves the html page to the browser
 				// need to cache the file more intelligently for scalability
 				// nice to have: log the specific error on the server-side
-				fs.readFile('./clientPage.html', function(error, content) {
-					if (error) {
-						response.writeHead(500);
-						response.end("Error: could not load main page");
-						// this assumes the browser does not need to obtain any css or js referenced in the html.
-						// for now that is the case. Otherwise see basic snippets at 
-						// http://thecodinghumanist.com/blog/archives/2011/5/6/serving-static-files-from-node-js
-					}
-					else {
-						response.writeHead(200, { 'Content-Type': 'text/html' });
-						response.end(content, 'utf-8');
-					}
-				});
+				request.url += 'clientPage.html';
+				staticContentServer.serve(request, response);
 				break;
-			case '/run':
-				response.writeHead(200, {'Content-Type': 'text/plain'});
-				response.write('Running the agent....');				
-				invoke(response);				
-				break;
-			case '/knockout-2.1.0.js':
-				fs.readFile('./knockout-2.1.0.js', function(error, content) {
-					if (error) {
-						response.writeHead(500);
-						response.end("Error: could not load required javascript library");
-						// this assumes the browser does not need to obtain any css or js referenced in the html.
-						// for now that is the case. Otherwise see basic snippets at 
-						// http://thecodinghumanist.com/blog/archives/2011/5/6/serving-static-files-from-node-js
-					}
-					else {
-						response.writeHead(200, { 'Content-Type': 'text/javascript' });
-						response.end(content, 'utf-8');
-					}
-				});
-				break;
+			default:
+				staticContentServer.serve(request, response);
+			/*
 			default:
 				response.writeHead(200, {'Content-Type': 'text/plain'});	
 				response.end('Oops, the requested page was not found....');	
+			*/
 		}	
 }
 
