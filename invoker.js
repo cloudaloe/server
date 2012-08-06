@@ -38,14 +38,17 @@ function handler(request, response) {
 	if (request.method == 'GET') 
 		switch(request.url)
 		{
+			//
+			// Consider adding: nice error page for not-found files.
+			// 					currently returns status 404 and a blank page for not-found files
+			//
 			case '/': 
-				// serves the html page to the browser
-				// need to cache the file more intelligently for scalability
-				// nice to have: log the specific error on the server-side
+				// serves the main html page to the browser
 				request.url += 'clientPage.html';
 				staticContentServer.serve(request, response);
 				break;
 			default:
+				// this is for when the html page causes the browser to locally load css and js libraries
 				staticContentServer.serve(request, response);
 			/*
 			default:
