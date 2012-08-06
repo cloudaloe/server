@@ -11,24 +11,37 @@
 
   
   <body>
-  	<p>Agent status: <strong data-bind="text: agentStatusText"></strong></p>
+  	<div>Agent status: <strong data-bind="text: agentStatusText"></strong></div>
+	<br>
 	<div>
 		<button type="button" onClick="runNow()">Run now</button>				
+	</div>
+	<br>
+	<br>
+	<div>
+		<p>Agent progress:</p>
+		<p data-bind="text: agentStdout"></p>
 	</div>
   </body>
 
   
   <script>
 	var socket = io.connect('http://localhost:1337');
+	
 	socket.on('agentStatus', function (SRVagentStatus) {
 		//alert('got agentStatus message: ' + SRVagentStatus);
 		if (SRVagentStatus) { myViewModel.agentStatusText('currently running') }
 		else { myViewModel.agentStatusText('not currently running') }
 	});
 	
+	socket.on('agentStdout', function (data) {
+		{ myViewModel.agentStdout(data) }
+	});
+		
 	// Create some observables, and bind them to the page (all with knockout.js).
 	var myViewModel = {
-		agentStatusText: ko.observable('getting agent status...')
+		agentStatusText: ko.observable('getting agent status...'),
+		agentStdout: ko.observable('')
 	} 
 	ko.applyBindings(myViewModel); 
 					

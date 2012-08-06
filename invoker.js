@@ -14,6 +14,7 @@ else
 
 var app = require('http').createServer(handler)
 var io = require('socket.io').listen(app)
+io.set('log level', 2); 
 
 var static = require('node-static'); 
 staticContentServer = new static.Server('./public', { cache: false });
@@ -88,8 +89,8 @@ function invokeHeadless(socket){
 		
 	child=spawn('java',['-jar', 'data-obtainer.jar'])	
 		
-	child.stdout.on('data', function (data) { });	
-	child.stderr.on('data', function (data) { });
+	child.stdout.on('data', function (data) { socket.emit('agentStdout', String(data)) });	
+	child.stderr.on('data', function (data) { socket.emit('agentStderr', String(data)) });	
 	child.on('exit', function (code) { 
 		invocationDuration = process.hrtime(time);	
 		console.log('Child agent finished with code ' + code + "," + " having operated for %d seconds and %d millieseoncds.", invocationDuration[0], invocationDuration[1]/1000000); 
