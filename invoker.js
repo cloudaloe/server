@@ -1,6 +1,6 @@
 //
 // Module for UI leaden agent management
-// Launches on the command prompt through entering: node invoker.js (after npm install socket.io express)
+// Launches on the command prompt through entering: node invoker.js (after some npm installs)
 //
 
 //var fs 	= require('fs');
