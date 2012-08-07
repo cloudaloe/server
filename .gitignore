@@ -1,6 +1,5 @@
 /node_modules
 /public/jquery
-/public/knockout*
 /downloads
 /databases
 data-obtainer.jar
