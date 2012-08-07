@@ -1,17 +1,12 @@
 //
-// New module for UI leaden management - not stable and should not be run other than for development
+// Module for UI leaden agent management
 // Launches on the command prompt through entering: node invoker.js (after npm install socket.io express)
 //
 
-var fs 	= require('fs');
+//var fs 	= require('fs');
 var nconf = require('nconf'); 
 nconf.file({ file: 'config/config.json'});
 var agentIntervalSeconds = nconf.get('agentIntervalSeconds');
-if (agentIntervalSeconds) 
-	{console.log('Agent interval is ' + agentIntervalSeconds +' seconds.');}
-else
-	{console.log('Agent interval not yet set.');}
-
 var app = require('http').createServer(handler)
 var io = require('socket.io').listen(app)
 io.set('log level', 2); 
@@ -28,16 +23,16 @@ app.listen(port);
 io.sockets.on('connection', function (socket) {
 	socket.emit('agentStatus', agentRunning);
 	socket.on('runNow', function (clientObject) {
-	if (agentRunning) 
-	{ 
-		console.log('"Request to invoke the agent received from client, but the agent is already running') 
-	}
-	else
-	{
-		console.log("Request to invoke the agent received from client. Params: " + clientObject.runParams + ".");
-		console.log('About to invoke the agent....');				
-		invokeHeadless(socket);
-	}
+		if (agentRunning) 
+		{ 
+			console.log('Request to invoke the agent received from client, but the agent is already running') 
+		}
+		else
+		{
+			console.log("Request to invoke the agent received from client. Params: " + clientObject.runParams + ".");
+			console.log('About to invoke the agent....');				
+			invoke(socket);
+		}
 	});
 });
 
@@ -47,7 +42,11 @@ var agentRunning=false;
 //var nodetime = require('nodetime');
 //nodetime.profile();
 
-console.log('Uber Agent is up. Its UI listening on http://127.0.0.1:' + port + '.\n');
+console.log('Uber Agent started - UI listening on http://127.0.0.1:' + port + '.');
+if (agentIntervalSeconds) 
+	{console.log('Agent interval is ' + agentIntervalSeconds +' seconds but not yet implemented.');}
+else
+	{console.log('Agent interval not yet set.');}
 
 function handler(request, response) {
 	console.log('Received request - method: ' + request.method + ' url: ' + request.url);
@@ -74,12 +73,7 @@ function handler(request, response) {
 		}	
 }
 
-// problem - this doesn't stream the agent log on screen, only shows it once the agent finishes off
-// should use Angular / Meteor / Ajax to stream it
-// later also streamm it into a usable place on screen
-// later also address the horrible dull formatting
-
-function invokeHeadless(socket){
+function invoke(socket){
 
 	var time = process.hrtime();
 	var spawn = require('child_process').spawn
@@ -93,7 +87,7 @@ function invokeHeadless(socket){
 	child.stderr.on('data', function (data) { socket.emit('agentStderr', String(data)) });	
 	child.on('exit', function (code) { 
 		invocationDuration = process.hrtime(time);	
-		console.log('Child agent finished with code ' + code + "," + " having operated for %d seconds and %d millieseoncds.", invocationDuration[0], invocationDuration[1]/1000000); 
+		console.log('Agent finished with code ' + code + "," + " having operated for %d seconds and %d millieseoncds.", invocationDuration[0], invocationDuration[1]/1000000); 
 		
 		agentRunning=false;
 		socket.emit('agentStatus', agentRunning);		
@@ -101,7 +95,9 @@ function invokeHeadless(socket){
 }
 
 function DeprecatedInvoke(response){
-
+	//
+	// ultimately, throw this function away
+	//
 	agentRunning=true;
 	var time = process.hrtime();
 	var spawn = require('child_process').spawn
