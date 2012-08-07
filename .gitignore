@@ -1,6 +1,6 @@
 /node_modules
 /public/jquery
-/public/knockout-2.1.0.js
+public/knockout-2.1.0.js
 /downloads
 /databases
 data-obtainer.jar
