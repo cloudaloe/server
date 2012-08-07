@@ -3,7 +3,7 @@
 // Launches on the command prompt through entering: node invoker.js (after some npm installs)
 //
 
-//var fs 	= require('fs');
+//var fs = require('fs');
 var nconf = require('nconf'); 
 nconf.file({ file: 'config/config.json'});
 var agentIntervalSeconds = nconf.get('agentIntervalSeconds');
