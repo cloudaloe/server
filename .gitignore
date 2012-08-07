@@ -1,8 +1,8 @@
 /node_modules
 /public/jquery
-knockout-2.1.0.js
 /downloads
 /databases
 data-obtainer.jar
 data.csv
+knock*.js
 /obsolete*
