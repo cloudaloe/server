@@ -3,20 +3,18 @@
   <head>
     <script src="/socket.io/socket.io.js"></script>
 	<script type='text/javascript' src='knockout-2.1.0.js'></script>
-	<link type="text/css" href="jquery/css/dark-hive/jquery-ui-1.8.22.custom.css" rel="stylesheet" />
+	<link type="text/css" href="jquery/css/le-frog/jquery-ui-1.8.22.custom.css" rel="stylesheet" />
 	<script type="text/javascript" src="jquery/js/jquery-1.7.2.min.js"></script>
 	<script type="text/javascript" src="jquery/js/jquery-ui-1.8.22.custom.min.js"></script>
-			
+		
   </head>
 
   
   <body>
-  	<div>Agent status: <strong data-bind="text: agentStatusText"></strong></div>
-	<br>
-	<div>
-		<button type="button" onClick="runNow()">Run now</button>				
+  	<div>
+		<button id=runNow onClick="runNow()">Run now</button>				
 	</div>
-	<br>
+	<div>Agent status: <strong data-bind="text: agentStatusText"></strong></div>
 	<br>
 	<div>
 		<p>Agent progress:</p>
@@ -26,8 +24,9 @@
 
   
   <script>
+	$('#runNow').button();
 	var socket = io.connect('http://localhost:1337');
-	
+		
 	socket.on('agentStatus', function (SRVagentStatus) {
 		//alert('got agentStatus message: ' + SRVagentStatus);
 		if (SRVagentStatus) { myViewModel.agentStatusText('currently running') }
