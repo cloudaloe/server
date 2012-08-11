@@ -1,0 +1,36 @@
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+		<link rel="stylesheet" type="text/css" href="./myCSS.css">
+		<script type='text/javascript' src='http://d3js.org/d3.v2.js'></script>    	
+		<title>
+		</title>
+	</head>
+  	<body>
+		<div id='chartSpace'  />
+			<svg id='chart'>
+		</body>
+	<script>
+				
+		// benign page load transitions
+		var chartSpace = d3.select("#chartSpace")
+		chartSpace.transition().style("margin-top", "10%").duration(1000).ease("cubic-in-out");				
+		d3.select("body").transition()
+			.style("background-color", "white")
+			.duration(500).ease("linear");	
+			
+		// pull csv file from the server, asynchronously
+		d3.csv("stocks.csv", function(data) {
+			if (data) {
+				//show the data as a browsable browser console object
+				//console.dir(data);
+			}
+			else 
+				alert("failed loading data file");
+		});
+		
+		var chart = d3.select("#chart");
+		chart.append("svg:rect").attr("x", 100).attr("y", 100).attr("width", 100).attr("height", 100).enter();
+
+	</script>
+</html>
