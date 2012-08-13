@@ -12,42 +12,47 @@
 		</body>
 	<script>
 
-		var clientCodeDebug = 'high' // need to actually pass its value from the server 
+		var clientCodeDebug = 'high'; // need to actually pass its value from the server 
+		var chart = d3.select("#chart");		
 		var data;
-	
-		function loadCSV(fileName)
-		{	
-			d3.csv(fileName, function(data) 
-			{
-				if (data) 
-					if (clientCodeDebug=='high')
-						//show the data as a browsable browser console object
-						console.dir(data);
-					else;
-				else 
-					alert("failed loading data file" + fileName);
-			});
-		}
 		
-		function initialize()
-		{
+		function d3VisualSanity() {
+			// sanity checking d3 is working by drawing a meaningless box
+			// the page will typically never invoke it but it can be invoked 
+			// from the browser console
+			chart.append("svg:rect").attr("x", 100).attr("y", 100).attr("width", 100).attr("height", 100);}
+			
+		function loadCSV(fileName) {
+			// this function is no good for real-world interactions, as the callback can't
+			// be dynamically told where to put the loaded data, and also because it can't
+			// use https only http. 
+				d3.csv(fileName, function(csvData) 
+				{
+					if (csvData) 
+					{
+						data = csvData;
+						if (clientCodeDebug == 'high')
+							//show the data as a browsable browser console object
+							console.dir(data);
+						else;
+					}
+					else 
+						alert("failed loading data file" + fileName);
+				});}
+		
+		function initializeView() {
 			// benign page load transitions
 			var chartSpace = d3.select("#chartSpace")
 			chartSpace.transition().style("margin-top", "10%").duration(1000).ease("cubic-in-out");				
 			d3.select("body").transition()
 				.style("background-color", "white")
-				.duration(500).ease("linear");	
-				
-			// pull csv file from the server, asynchronously
-			
-			loadCSV("table1.csv"); 
-			
-			var chart = d3.select("#chart");
-			//sanity checking d3 is working by drawing a meaningless black box
-			//chart.append("svg:rect").attr("x", 100).attr("y", 100).attr("width", 100).attr("height", 100);
-		}
+				.duration(500).ease("linear");		
+			}
 		
-		initialize();
+		initializeView();
+		
+		// pull csv file from the server, asynchronously for now
+		loadCSV("table1.csv");		
 		
 	</script>
 </html>
