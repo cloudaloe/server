@@ -20,17 +20,27 @@
 			.duration(500).ease("linear");	
 			
 		// pull csv file from the server, asynchronously
-		d3.csv("stocks.csv", function(data) {
+		d3.csv("table1.csv", function(data) {
 			if (data) {
 				//show the data as a browsable browser console object
-				//console.dir(data);
+				console.dir(data);
 			}
 			else 
 				alert("failed loading data file");
 		});
 		
+		d3.csv("table2.csv", function(data) {
+			if (data) {
+				//show the data as a browsable browser console object
+				console.dir(data);
+			}
+			else 
+				alert("failed loading data file");
+		});
+		
+		
 		var chart = d3.select("#chart");
-		chart.append("svg:rect").attr("x", 100).attr("y", 100).attr("width", 100).attr("height", 100).enter();
+		chart.append("svg:rect").attr("x", 100).attr("y", 100).attr("width", 100).attr("height", 100);
 
 	</script>
 </html>
