@@ -11,36 +11,43 @@
 			<svg id='chart'>
 		</body>
 	<script>
-				
-		// benign page load transitions
-		var chartSpace = d3.select("#chartSpace")
-		chartSpace.transition().style("margin-top", "10%").duration(1000).ease("cubic-in-out");				
-		d3.select("body").transition()
-			.style("background-color", "white")
-			.duration(500).ease("linear");	
-			
-		// pull csv file from the server, asynchronously
-		d3.csv("table1.csv", function(data) {
-			if (data) {
-				//show the data as a browsable browser console object
-				console.dir(data);
-			}
-			else 
-				alert("failed loading data file");
-		});
-		
-		d3.csv("table2.csv", function(data) {
-			if (data) {
-				//show the data as a browsable browser console object
-				console.dir(data);
-			}
-			else 
-				alert("failed loading data file");
-		});
-		
-		
-		var chart = d3.select("#chart");
-		chart.append("svg:rect").attr("x", 100).attr("y", 100).attr("width", 100).attr("height", 100);
 
+		var clientCodeDebug = 'high' // need to actually pass its value from the server 
+		var data;
+	
+		function loadCSV(fileName)
+		{	
+			d3.csv(fileName, function(data) 
+			{
+				if (data) 
+					if (clientCodeDebug=='high')
+						//show the data as a browsable browser console object
+						console.dir(data);
+					else;
+				else 
+					alert("failed loading data file" + fileName);
+			});
+		}
+		
+		function initialize()
+		{
+			// benign page load transitions
+			var chartSpace = d3.select("#chartSpace")
+			chartSpace.transition().style("margin-top", "10%").duration(1000).ease("cubic-in-out");				
+			d3.select("body").transition()
+				.style("background-color", "white")
+				.duration(500).ease("linear");	
+				
+			// pull csv file from the server, asynchronously
+			
+			loadCSV("table1.csv"); 
+			
+			var chart = d3.select("#chart");
+			//sanity checking d3 is working by drawing a meaningless black box
+			//chart.append("svg:rect").attr("x", 100).attr("y", 100).attr("width", 100).attr("height", 100);
+		}
+		
+		initialize();
+		
 	</script>
 </html>
