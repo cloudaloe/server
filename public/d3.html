@@ -14,7 +14,7 @@
 		</body>
 	<script>
 
-		var clientCodeDebug = 'high'; // need to actually pass its value from the server 
+		var clientCodeDebug = 'low'; // need to actually pass its value from the server 
 		//var chart = d3.select("#chart");		
 		//var chart = d3.select("#chartSpace").append("svg:svg");
 		var data;
@@ -36,9 +36,9 @@
 					data = csvData;
 					if (clientCodeDebug == 'high') {
 						//show the data as a browsable browser console object
-						console.dir(data);
-						dataReady(); }
+						console.dir(data); }
 					else;
+					dataReady();
 				}
 				else 
 					alert("failed loading data file" + fileName);
@@ -52,34 +52,38 @@
 				.style("background-color", "white")
 				.duration(500).ease("linear"); }
 		
-		function rickshawChart() {
+		function rickshawChart(data) {
 			var graph = new Rickshaw.Graph( {
 				element: document.querySelector("#chartSpace"), 
 				renderer: 'line',				
 				series: [{
 					color: 'green',
-					data: [ 
-						{ x: 0, y: 40 }, 
-						{ x: 1, y: 49 }, 
-						{ x: 2, y: 38 }, 
-						{ x: 3, y: 30 }, 
-						{ x: 4, y: 32 } ]
+					data: data
 				}]
 			});
  
+			console.dir(graph);
 			graph.render();	}
 			
+		function columnsFromCube(dataCube, x, y) {
+			return dataCube.map(function(value) 
+				{
+					return ({x: parse(value[x]).getTime() , y: parseFloat(value[y])});
+				});}
+			
 		function dataReady() {
-			var series1 = data;
-			console.dir(series1);
-			rickshawChart();
+			var series1 = columnsFromCube(data, 'Time', 'Data Size');
+			console.dir(data);
+			console.dir(series1);			
+			rickshawChart(series1);
 		}
 		
 		initializeView();
 		
 		// pull csv file from the server, asynchronously for now
-		loadCSV("table1.csv");		
-
+		loadCSV("table2.csv");		
+		var parse = d3.time.format("%d/%m/%Y %H:%M").parse;					
+		
 		// Parse dates and numbers. We assume values are sorted by date.
 		// parse = d3.time.format("%c").parse;	// format specifiers at http://tinyurl.com/cmakk7e
 
