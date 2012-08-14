@@ -2,18 +2,21 @@
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 		<link rel="stylesheet" type="text/css" href="./myCSS.css">
+		<!-- link rel="stylesheet" type="text/css" href="./rickshaw.min.css" -->		
 		<script type='text/javascript' src='http://d3js.org/d3.v2.js'></script>    	
+		<script type='text/javascript' src="rickshaw.min.js"></script> 		
 		<title>
 		</title>
 	</head>
   	<body>
-		<div id='chartSpace'  />
-			<svg id='chart'>
+		<div id='chartSpace'></div>
+			<!--svg id='chart'-->
 		</body>
 	<script>
 
 		var clientCodeDebug = 'high'; // need to actually pass its value from the server 
-		var chart = d3.select("#chart");		
+		//var chart = d3.select("#chart");		
+		//var chart = d3.select("#chartSpace").append("svg:svg");
 		var data;
 		
 		function d3VisualSanity() {
@@ -43,11 +46,34 @@
 	
 		function initializeView() {
 			// benign page load transitions
-			var chartSpace = d3.select("#chartSpace")
+			var chartSpace = d3.select("#chartSpace");
 			chartSpace.transition().style("margin-top", "10%").duration(1000).ease("cubic-in-out");				
 			d3.select("body").transition()
 				.style("background-color", "white")
 				.duration(500).ease("linear"); }
+		
+		function rickshawChart() {
+			var graph = new Rickshaw.Graph( {
+				element: document.querySelector("#chartSpace"), 
+				renderer: 'line',				
+				series: [{
+					color: 'green',
+					data: [ 
+						{ x: 0, y: 40 }, 
+						{ x: 1, y: 49 }, 
+						{ x: 2, y: 38 }, 
+						{ x: 3, y: 30 }, 
+						{ x: 4, y: 32 } ]
+				}]
+			});
+ 
+			graph.render();	}
+			
+		function dataReady() {
+			var series1 = data;
+			console.dir(series1);
+			rickshawChart();
+		}
 		
 		initializeView();
 		
@@ -55,15 +81,8 @@
 		loadCSV("table1.csv");		
 
 		// Parse dates and numbers. We assume values are sorted by date.
-			parse = d3.time.format("%c").parse;	// format specifiers at http://tinyurl.com/cmakk7e
-			
-		function dataReady() {
-			var series1 = data;
-			console.dir(series1);
-			//series1.forEach(function(data) {
-				//data.Time = parse(data.Time);
-				//console.log(data.Time); });			
-		}
+		// parse = d3.time.format("%c").parse;	// format specifiers at http://tinyurl.com/cmakk7e
+
 		
 	</script>
 </html>
