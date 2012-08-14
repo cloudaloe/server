@@ -20,39 +20,50 @@
 			// sanity checking d3 is working by drawing a meaningless box
 			// the page will typically never invoke it but it can be invoked 
 			// from the browser console
-			chart.append("svg:rect").attr("x", 100).attr("y", 100).attr("width", 100).attr("height", 100);}
+			chart.append("svg:rect").attr("x", 100).attr("y", 100).attr("width", 100).attr("height", 100); }
 			
 		function loadCSV(fileName) {
 			// this function is no good for real-world interactions, as the callback can't
 			// be dynamically told where to put the loaded data, and also because it can't
 			// use https only http. 
-				d3.csv(fileName, function(csvData) 
+			d3.csv(fileName, function(csvData) 
+			{
+				if (csvData) 
 				{
-					if (csvData) 
-					{
-						data = csvData;
-						if (clientCodeDebug == 'high')
-							//show the data as a browsable browser console object
-							console.dir(data);
-						else;
-					}
-					else 
-						alert("failed loading data file" + fileName);
-				});}
-		
+					data = csvData;
+					if (clientCodeDebug == 'high') {
+						//show the data as a browsable browser console object
+						console.dir(data);
+						dataReady(); }
+					else;
+				}
+				else 
+					alert("failed loading data file" + fileName);
+			}); }
+	
 		function initializeView() {
 			// benign page load transitions
 			var chartSpace = d3.select("#chartSpace")
 			chartSpace.transition().style("margin-top", "10%").duration(1000).ease("cubic-in-out");				
 			d3.select("body").transition()
 				.style("background-color", "white")
-				.duration(500).ease("linear");		
-			}
+				.duration(500).ease("linear"); }
 		
 		initializeView();
 		
 		// pull csv file from the server, asynchronously for now
 		loadCSV("table1.csv");		
+
+		// Parse dates and numbers. We assume values are sorted by date.
+			parse = d3.time.format("%c").parse;	// format specifiers at http://tinyurl.com/cmakk7e
+			
+		function dataReady() {
+			var series1 = data;
+			console.dir(series1);
+			//series1.forEach(function(data) {
+				//data.Time = parse(data.Time);
+				//console.log(data.Time); });			
+		}
 		
 	</script>
 </html>
