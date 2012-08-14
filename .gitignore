@@ -2,7 +2,8 @@
 /downloads
 /databases
 data-obtainer.jar
-data.csv
+*.csv
 /obsolete*
 /public/jquery
 knockout*.js
+rickshaw*.*
