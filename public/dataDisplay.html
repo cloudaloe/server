@@ -1,7 +1,7 @@
 <html>
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-		<link rel="stylesheet" type="text/css" href="./myCSS.css">
+		<link rel="stylesheet" type="text/css" href="./overall.css">
 		<link rel="stylesheet" type="text/css" href="./d3elements.css">		
 		<!-- link rel="stylesheet" type="text/css" href="./rickshaw.min.css" -->		
 		<script type='text/javascript' src='http://d3js.org/d3.v2.js'></script>    	
@@ -11,10 +11,16 @@
 		</title>
 	</head>
   	<body>
+		<form id="questionContainer">
+			<strong>What would you like to see?</strong>
+			<div>
+				<input id="questionInput" name="" maxlength="254" type="text">
+			</div>
+		</form>
 		<div id='chartSpace'></div>
 			<!--svg id='chart'-->
 		</body>
 	<script>
-		initializeView();
+		initializeBackground();
 	</script>
 </html>

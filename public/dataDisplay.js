@@ -28,14 +28,16 @@ function loadCSV(fileName) {
 			alert("failed loading data file" + fileName);
 	}); }
 
-function initializeView() {
-	// benign page load transitions
-	var chartSpace = d3.select("#chartSpace");
-	chartSpace.transition().style("margin-top", "10%").duration(1000).ease("cubic-in-out");				
+function initializeBackground() {
 	d3.select("body").transition()
 		.style("background-color", "white")
 		.duration(500).ease("linear"); }
-
+	
+function initializeView() {
+	// benign page load transitions
+	var chartSpace = d3.select("#chartSpace");
+	chartSpace.transition().style("margin-top", "10%").duration(1000).ease("cubic-in-out");	}
+	
 function rickshawChart(data) {
 	var graph = new Rickshaw.Graph( {
 		element: document.querySelector("#chartSpace"), 
@@ -48,12 +50,6 @@ function rickshawChart(data) {
 	});
 
 	console.dir(graph);
-					
-	var yAxis = new Rickshaw.Graph.Axis.Y({
-	graph: graph
-		});
-
-	yAxis.render();
 	graph.render();	}
 	
 function columnsFromCube(dataCube, x, y) {
