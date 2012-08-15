@@ -7,14 +7,14 @@
 		<script type='text/javascript' src="dataDisplay.js"></script> 				
 		
 		<!-- just in case we want to compare to rickshaw during development: -->
-		<script type='text/javascript' src="rickshaw.min.js"></script> 		
-		<script type='text/javascript' src="rickshaw-chart.js"></script> 				
+		<!-- script type='text/javascript' src="rickshaw.min.js"></script --> 		
+		<!-- script type='text/javascript' src="rickshaw-chart.js"></script --> 				
 		
 		<title>
 		</title>
 	</head>
   	<body>
-		<form id="questionContainer">
+		<form id="questionContainer" onmouseover="focusOnInput();">
 			<strong>What would you like to see?</strong>
 			<div>
 				<input id="questionInput" name="" maxlength="254" type="text">
@@ -24,6 +24,12 @@
 			<!--svg id='chart'-->
 		</body>
 	<script>
-		initializeBackground();
+		function focusOnInput(){
+			document.getElementById('questionInput').focus();			
+		}
+			
+		//initializeBackground();
+		initializeChartSpace();
+		//initializeQuestionContainer();
 	</script>
 </html>

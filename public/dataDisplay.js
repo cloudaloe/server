@@ -29,15 +29,21 @@ function loadCSV(fileName) {
 	}); }
 
 function initializeBackground() {
+	// benign page load transitions	
 	d3.select("body").transition()
 		.style("background-color", "white")
 		.duration(500).ease("linear"); }
 	
-function initializeView() {
+function initializeChartSpace() {
 	// benign page load transitions
 	var chartSpace = d3.select("#chartSpace");
 	chartSpace.transition().style("margin-top", "10%").duration(1000).ease("cubic-in-out");	}
 		
+function initializeQuestionContainer() {
+	// benign page load transitions
+	var questionContainer = d3.select("#questionContainer");
+	questionContainer.transition().style("margin-top", "10%").duration(1000).ease("cubic-in-out");	}
+
 function columnsFromCube(dataCube, x, y) {
 	return dataCube.map(function(value) 
 		{
@@ -49,7 +55,6 @@ function dataReady() {
 	var series2 = columnsFromCube(data, 'Time', 'Index Size');			
 	console.dir(data);
 	console.dir(series1);			
-	rickshawChart(series1);
 }
 
 // pull csv file from the server, asynchronously for now
