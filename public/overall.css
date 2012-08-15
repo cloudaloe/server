@@ -1,3 +1,7 @@
+body {
+	background-color: #3a3a3a;
+}
+
 #questionContainer {
 	font-family: Helvetica, Arial, Sans-serif;		
 	background-color: #e0ded9;
@@ -17,10 +21,6 @@
 	background-color: #e4e2da;	
 }
 
-body {
-	background-color: #3a3a3a;
-}
-
 #questionInput {
 	border-radius: 4px;
 	padding: 6px 4px 6px 4px;
@@ -32,6 +32,13 @@ body {
 }
 
 #chartSpace {
+	margin-top: 1.4em;
+	margin-left: auto;
+	margin-right: auto;
+	border-radius: 12px;		
+	border: 1px solid rgb(200,200,200);		
+	padding: 2em;
+	
 	background-color: #f0eee9;
 	position: relative;	
 	margin-left: auto;
