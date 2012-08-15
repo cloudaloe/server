@@ -82,11 +82,11 @@ function invoke(socket){
 	var time = process.hrtime();
 	var spawn = require('child_process').spawn;
 
-	// set timeout for next invocation, only if invoked by timer
+	// Only if invoked by the timer, set a timeout for a next invocation. 
+	// I.e. if invoked by client request, no need to set that timeout.
 	if (!socket)
 		setTimeout(invoke, agentIntervalSeconds*1000, null);
 	
-	// !! refactor to external functions !! this is spaghetti
 	if (agentRunning == true)
 		console.log("Timed invocation skipped, as invocation by client request is in progress.");			
 	else
