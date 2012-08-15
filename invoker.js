@@ -4,12 +4,15 @@
 //
 
 //var fs = require('fs');
+//var crypto = require('crypto')
 var nconf = require('nconf'); 
 nconf.file({ file: 'config/config.json'});
 var agentIntervalSeconds = nconf.get('agentIntervalSeconds');
 var app = require('http').createServer(handler)
 var io = require('socket.io').listen(app)
 io.set('log level', 2); 
+
+//var cipher = crypto.createCipher('aes256', 'my-password');
 
 var static = require('node-static'); 
 staticContentServer = new static.Server('./public', { cache: false });
@@ -25,12 +28,11 @@ io.sockets.on('connection', function (socket) {
 	socket.on('runNow', function (clientObject) {
 		if (agentRunning) 
 		{ 
-			console.log('Request to invoke the agent received from client, but the agent is already running') 
+			console.log('Request to invoke the agent received from client, but the agent is already running.') 
 		}
 		else
 		{
 			console.log("Request to invoke the agent received from client. Params: " + clientObject.runParams + ".");
-			console.log('About to invoke the agent....');				
 			invoke(socket);
 		}
 	});
@@ -44,10 +46,13 @@ var agentRunning=false;
 
 console.log('Uber Agent started - UI listening on http://127.0.0.1:' + port + '.');
 if (agentIntervalSeconds) 
-	{console.log('Agent interval is ' + agentIntervalSeconds +' seconds but not yet implemented.');}
+{
+	console.log('Agent interval is ' + agentIntervalSeconds + ' seconds.' + ' Starting invocation loop now.');
+	invoke();
+	}
 else
-	{console.log('Agent interval not yet set.');}
-
+	console.log('Agent interval not yet set.');
+		
 function handler(request, response) {
 	console.log('Received request - method: ' + request.method + ' url: ' + request.url);
 	if (request.method == 'GET') 
@@ -74,24 +79,36 @@ function handler(request, response) {
 }
 
 function invoke(socket){
-
 	var time = process.hrtime();
-	var spawn = require('child_process').spawn
+	var spawn = require('child_process').spawn;
+
+	// set timeout for next invocation, only if invoked by timer
+	if (!socket)
+		setTimeout(invoke, agentIntervalSeconds*1000, null);
 	
-	agentRunning=true;
-	socket.emit('agentStatus', agentRunning);		
+	// !! refactor to external functions !! this is spaghetti
+	if (agentRunning == true)
+		console.log("Timed invocation skipped, as invocation by client request is in progress.");			
+	else
+	{	
+		console.log('About to invoke the agent....');				
 		
-	child=spawn('java',['-jar', 'data-obtainer.jar'])	
-		
-	child.stdout.on('data', function (data) { socket.emit('agentStdout', String(data)) });	
-	child.stderr.on('data', function (data) { socket.emit('agentStderr', String(data)) });	
-	child.on('exit', function (code) { 
-		invocationDuration = process.hrtime(time);	
-		console.log('Agent finished with code ' + code + "," + " having operated for %d seconds and %d millieseoncds.", invocationDuration[0], invocationDuration[1]/1000000); 
-		
-		agentRunning=false;
-		socket.emit('agentStatus', agentRunning);		
-	});
+		agentRunning=true;
+		io.sockets.emit('agentStatus', agentRunning);		
+				
+		child=spawn('java',['-jar', 'data-obtainer.jar'])	
+			
+		child.stdout.on('data', function (data) { io.sockets.emit('agentStdout', String(data)) });	
+		child.stderr.on('data', function (data) { io.sockets.emit('agentStderr', String(data)) });	
+			
+		child.on('exit', function (code) { 
+			invocationDuration = process.hrtime(time);	
+			console.log('Agent finished with code ' + code + "," + " having operated for %d seconds and %d millieseoncds.", invocationDuration[0], invocationDuration[1]/1000000); 
+			agentRunning=false;
+			
+			io.sockets.emit('agentStatus', agentRunning);		
+		});
+	}
 }
 
 function DeprecatedInvoke(response){

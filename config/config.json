@@ -3,5 +3,5 @@
     "host": "localhost",
     "port": 1337
   },
-  "agentIntervalSeconds": 45
+  "agentIntervalSeconds": 20
 }
