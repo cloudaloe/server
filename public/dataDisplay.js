@@ -37,21 +37,7 @@ function initializeView() {
 	// benign page load transitions
 	var chartSpace = d3.select("#chartSpace");
 	chartSpace.transition().style("margin-top", "10%").duration(1000).ease("cubic-in-out");	}
-	
-function rickshawChart(data) {
-	var graph = new Rickshaw.Graph( {
-		element: document.querySelector("#chartSpace"), 
-		renderer: 'line',				
-		padding: {top: 0.2, bottom: 0.02, right: 0.02, left: 0.02},
-		series: [{
-			color: 'green',
-			data: data
-		}]
-	});
-
-	console.dir(graph);
-	graph.render();	}
-	
+		
 function columnsFromCube(dataCube, x, y) {
 	return dataCube.map(function(value) 
 		{
