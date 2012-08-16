@@ -1,6 +1,7 @@
 /node_modules
 /downloads
 /databases
+/.idea
 data-obtainer.jar
 *.csv
 /obsolete*

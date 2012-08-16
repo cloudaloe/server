@@ -1,7 +1,5 @@
 var clientCodeDebug = 'low'; // need to actually pass its value from the server 
-//var chart = d3.select("#chart");		
-//var chart = d3.select("#chartSpace").append("svg:svg");
-var data;
+var data, series;
 
 function d3VisualSanity() {
 	// sanity checking d3 is working by drawing a meaningless box
@@ -37,24 +35,34 @@ function initializeBackground() {
 function initializeChartSpace() {
 	// benign page load transitions
 	var chartSpace = d3.select("#chartSpace");
-	chartSpace.transition().style("margin-top", "10%").duration(1000).ease("cubic-in-out");	}
+	chartSpace.transition().style("margin-top", "10%").duration(1000).ease("cubic-in-out");	
+	}
+	
 		
 function initializeQuestionContainer() {
 	// benign page load transitions
 	var questionContainer = d3.select("#questionContainer");
 	questionContainer.transition().style("margin-top", "10%").duration(1000).ease("cubic-in-out");	}
 
-function columnsFromCube(dataCube, x, y) {
+/*function columnsFromCube(dataCube, x, y) {
 	return dataCube.map(function(value) 
 		{
 			return ({x: parse(value[x]).getTime() , y: parseFloat(value[y])});
+		});}*/
+		
+function extractSeries(cube, x, y) {
+	return cube.map(function(value) 
+		{
+			return ({x: parse(value[x]).getTime() , y: parseFloat(value[y])});
 		});}
+
 	
 function dataReady() {
-	var series1 = columnsFromCube(data, 'Time', 'Data Size');
-	var series2 = columnsFromCube(data, 'Time', 'Index Size');			
+	series = extractSeries(data, 'Time', 'Data Size');
+	//var series2 = columnsFromCube(data, 'Time', 'Index Size');			
 	console.dir(data);
-	console.dir(series1);			
+	console.dir(series);			
+	initSvg();		
 }
 
 // pull csv file from the server, asynchronously for now
