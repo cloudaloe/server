@@ -1,6 +1,3 @@
-//var chart = d3.select("#chart");		
-//var chart = d3.select("#chartSpace").append("svg:svg");
-
 function initSvg() {
 
 var hScale = d3.time.scale();
@@ -13,8 +10,8 @@ vScale.range([100,0]);
 vScale.domain([0, d3.max(series, function(d) { return d.y; })]);
 var vAxis = d3.svg.axis().scale(vScale);
 
-var m = [80, 80, 80, 80],
-var	width = "100%",
+var m = [80, 80, 80, 80]
+var	width = "100%"
 var	height = "100%"
     
 // An area generator, for the light fill.
