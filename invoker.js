@@ -11,6 +11,7 @@ var agentIntervalSeconds = nconf.get('agentIntervalSeconds');
 var app = require('http').createServer(handler)
 var io = require('socket.io').listen(app)
 io.set('log level', 2); 
+var invocationLoop;
 
 //var cipher = crypto.createCipher('aes256', 'my-password');
 
@@ -35,6 +36,25 @@ io.sockets.on('connection', function (socket) {
 			console.log("Request to invoke the agent received from client. Params: " + clientObject.runParams + ".");
 			invoke(socket);
 		}
+	});
+	
+	socket.on('pause', function (clientObject) {
+		if (agentRunning)
+		{
+			console.log('Request to pause invocation loop received from client.');
+			console.log('Pausing the invocation loop (this does not halt the agent run currently in progress).');
+		}
+		else
+		{
+			console.log('Request to pause invocation loop received from client.');
+			console.log('Pausing the invocation loop.');
+		}
+		
+		clearTimeout(invocationLoop);
+	});
+	socket.on('resume', function (clientObject) {
+		console.log('Request to resume invocation loop received from client.');
+		invoke();
 	});
 });
 
@@ -85,7 +105,7 @@ function invoke(socket){
 	// Only if invoked by the timer, set a timeout for a next invocation. 
 	// I.e. if invoked by client request, no need to set that timeout.
 	if (!socket)
-		setTimeout(invoke, agentIntervalSeconds*1000, null);
+		invocationLoop = setTimeout(invoke, agentIntervalSeconds*1000, null);
 	
 	if (agentRunning == true)
 		console.log("Timed invocation skipped, as invocation by client request is in progress.");			
