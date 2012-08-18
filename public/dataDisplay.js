@@ -32,14 +32,7 @@ function initializeBackground() {
 		.style("background-color", "white")
 		.duration(500).ease("linear"); }
 	
-function initializeChartSpace() {
-	// benign page load transitions
-	var chartSpace = d3.select("#chartSpace");
-	chartSpace.transition().style("margin-top", "10%").duration(1000).ease("cubic-in-out");	
-	}
-	
-		
-function initializeQuestionContainer() {
+function QuestionContainer() {
 	// benign page load transitions
 	var questionContainer = d3.select("#questionContainer");
 	questionContainer.transition().style("margin-top", "10%").duration(1000).ease("cubic-in-out");	}
@@ -62,6 +55,7 @@ function dataReady() {
 	//var series2 = columnsFromCube(data, 'Time', 'Index Size');			
 	console.dir(data);
 	console.dir(series);			
+	initializeChartSpace();	
 	initSvg();		
 }
 
