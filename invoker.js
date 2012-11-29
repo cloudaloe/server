@@ -13,6 +13,37 @@ var io = require('socket.io').listen(app)
 io.set('log level', 2); 
 var invocationLoop;
 
+var https = require('https'),      // module for https
+    fs =    require('fs');         // required to read certs and keys
+
+var options = {
+  key:    fs.readFileSync('OpenSSL/client.key'),
+  cert:   fs.readFileSync('OpenSSL/client.crt'),
+  passphrase: 'matan',
+  ca:     fs.readFileSync('OpenSSL/ca.crt'),  
+  hostname: '10.0.0.3',
+  port: 8000,
+  path: '/',
+  method: 'GET'
+};
+
+options.agent = new https.Agent(options);
+
+var req = https.request(options, function(res) {
+  console.log("statusCode: ", res.statusCode);
+  console.log("headers: ", res.headers);
+
+  res.on('data', function(d) {
+    process.stdout.write(d);
+  });
+});
+req.end();
+
+req.on('error', function(e) {
+  console.error(e);
+});
+
+
 //var cipher = crypto.createCipher('aes256', 'my-password');
 
 var static = require('node-static'); 

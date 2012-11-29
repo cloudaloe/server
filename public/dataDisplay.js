@@ -35,7 +35,7 @@ function initializeBackground() {
 function QuestionContainer() {
 	// benign page load transitions
 	var questionContainer = d3.select("#questionContainer");
-	questionContainer.transition().style("margin-top", "10%").duration(1000).ease("cubic-in-out");	}
+	questionContainer.transition().style("margin-top", "1%").duration(1000).ease("cubic-in-out");	}
 
 /*function columnsFromCube(dataCube, x, y) {
 	return dataCube.map(function(value) 
